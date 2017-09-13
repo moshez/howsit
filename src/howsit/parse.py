@@ -26,7 +26,7 @@ def get_problems(output):
             if b'[' not in line:
                 continue
             line = line.split(b'[')[1]
-            if b'behind' in line:
+            if b'ahead' in line:
                 yield _Status.UNPUSHED
         elif line.startswith(b'??'):
             yield _Status.UNTRACKED

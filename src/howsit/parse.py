@@ -19,7 +19,7 @@ _indicator = {
 def _get_indicator(value):
     return _indicator[value]
 
-def get_problems(output):
+def get_problems(output, push_output):
     lines = output.splitlines()
     for line in lines:
         if line.startswith(b'#'):
@@ -32,12 +32,16 @@ def get_problems(output):
             yield _Status.UNTRACKED
         else:
             yield _Status.UNCOMMITTED
+    equal = [line for line in push_output.splitlines() if line.startswith(b'=')]
+    if not equal:
+        yield _Status.UNPUSHED
     yield _Status.OK
 
 def get_indicator(executor):
     try:
         out, _ = executor.git.status(branch=None, porcelain=None).batch()
+        push_out, _ = executor.git.push(dry_run=None, porcelain=None).batch()
     except seashore.ProcessError:
         return _Status.NOTGIT
-    problem = min(get_problems(out))
+    problem = min(get_problems(out, push_out))
     return _get_indicator(problem)

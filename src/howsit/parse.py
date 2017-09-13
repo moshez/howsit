@@ -1,42 +1,43 @@
 import enum
 
-class Status(object):
+@enum.unique
+class _Status(enum.IntEnum):
     UNTRACKED = 0
     UNCOMMITTED = 1
     UNPUSHED = 2
     NOTGIT = 3
     OK = 4
 
-    _indicator = dict(
-        UNTRACKED='!',
-        UNCOMMITTED='C',
-        UNPUSHED='P',
-        NOTGIT='G',
-        OK='K',
-    )
+_indicator = {
+    _Status.UNTRACKED: '!',
+    _Status.UNCOMMITTED: 'C',
+    _Status.UNPUSHED: 'P',
+    _Status.NOTGIT: 'G',
+    _Status.OK: 'K',
+}
 
-    @classmethod
-    def get_indicator(cls, value):
-        return cls._indicator[value]
+def _get_indicator(value):
+    return _indicator[value]
 
 def get_problems(output):
     lines = output.splitlines()
     for line in lines:
-        if line.startswith('#')
-            if '[' not in line:
+        if line.startswith(b'#'):
+            if b'[' not in line:
                 continue
-            line = line.split('[')[1]
-            if 'behind' in line:
-                yield Status.UNPUSHED
-        elif line.startswith('??'):
-            yield status.UNTRACKED
-        elif:
-            yield status.UNCOMMITTED
+            line = line.split(b'[')[1]
+            if b'behind' in line:
+                yield _Status.UNPUSHED
+        elif line.startswith(b'??'):
+            yield _Status.UNTRACKED
+        else:
+            yield _Status.UNCOMMITTED
+    yield _Status.OK
 
 def get_indicator(executor):
     try:
         out, _ = executor.git.status(branch=None, porcelain=None).batch()
     except seashore.ProcessError:
-        return Status.NOTGIT
-    problem = min(get_problems(itertools.concat([Status.OK], output)))
-    return Status.get_indicator(problem)
+        return _Status.NOTGIT
+    problem = min(get_problems(out))
+    return _get_indicator(problem)

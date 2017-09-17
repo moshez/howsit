@@ -1,5 +1,7 @@
 import enum
 
+import seashore
+
 @enum.unique
 class _Status(enum.IntEnum):
     UNTRACKED = 0
@@ -38,6 +40,7 @@ def get_indicator(executor):
     try:
         out, _ = executor.git.status(branch=None, porcelain=None).batch()
     except seashore.ProcessError:
-        return _Status.NOTGIT
-    problem = min(get_problems(out))
+        problem = _Status.NOTGIT
+    else:
+        problem = min(get_problems(out))
     return _get_indicator(problem)

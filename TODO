@@ -1,0 +1,3 @@
+* Copy tox from reqpi
+* 100% unit tests
+* Lint + Flake8 + ebblint

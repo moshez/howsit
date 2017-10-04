@@ -20,9 +20,6 @@ _indicator = {
     _Status.OK: 'K',
 }
 
-def _get_indicator(value):
-    return _indicator[value]
-
 def get_problems(output):
     lines = output.splitlines()
     for line in lines:
@@ -47,4 +44,4 @@ def get_indicator(executor):
         problem = _Status.NOT_GIT
     else:
         problem = min(get_problems(out))
-    return _get_indicator(problem)
+    return _indicator[problem]

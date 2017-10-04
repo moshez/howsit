@@ -2,7 +2,11 @@ import unittest
 
 from howsit import parse
 
-class ParseTest(unittest.TestCase):
+class ProblemTest(unittest.TestCase):
 
-    def test_nothing(self):
-        self.assertEquals(1, 1)
+    def test_empty(self):
+        output = ""
+        l = list(parse.get_problems(output))
+        ok = l.pop(0)
+        self.assertEquals(l, [])
+        self.assertEquals(ok.name, 'OK')

@@ -4,6 +4,7 @@ import seashore
 
 from howsit import parse
 
+
 class ProblemTest(unittest.TestCase):
 
     def test_empty(self):
@@ -49,6 +50,7 @@ class ProblemTest(unittest.TestCase):
         self.assertEquals(ok.name, 'OK')
         self.assertEquals(problem.name, 'UNCOMMITTED')
 
+
 class DummyShell(object):
 
     is_git = True
@@ -58,11 +60,11 @@ class DummyShell(object):
 
     def batch(self, cmd, *args, **kwargs):
         if (cmd[:2] == ['git', 'status'] and
-            set(cmd[2:]) == set(['--porcelain', '--branch'])):
-             if self.is_git:
-                 return b'', b''
-             else:
-                 raise seashore.ProcessError(2, '', 'not a git directory\n')
+           set(cmd[2:]) == set(['--porcelain', '--branch'])):
+            if self.is_git:
+                return b'', b''
+            else:
+                raise seashore.ProcessError(2, '', 'not a git directory\n')
         raise ValueError("unknown command", cmd, args, kwargs)
 
 

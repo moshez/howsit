@@ -1,9 +1,11 @@
 import os
 import sys
 
+
 def run_me(executor):
     me = [sys.executable, '-m', 'howsit']
     return executor.command(me).batch()
+
 
 def self_test(executor, output, cwd):
     executor = executor.chdir(cwd)

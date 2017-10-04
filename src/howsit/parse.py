@@ -2,6 +2,7 @@ import enum
 
 import seashore
 
+
 @enum.unique
 class _Status(enum.IntEnum):
     UNTRACKED = 0
@@ -11,6 +12,7 @@ class _Status(enum.IntEnum):
     NOT_GIT = 4
     OK = 5
 
+
 _indicator = {
     _Status.UNTRACKED: '!',
     _Status.UNCOMMITTED: 'C',
@@ -19,6 +21,7 @@ _indicator = {
     _Status.NOT_GIT: 'G',
     _Status.OK: 'K',
 }
+
 
 def get_problems(output):
     lines = output.splitlines()
@@ -37,10 +40,11 @@ def get_problems(output):
             yield _Status.UNCOMMITTED
     yield _Status.OK
 
+
 def get_indicator(executor):
     try:
         out, _ = executor.git.status(branch=None, porcelain=None).batch()
-    except seashore.ProcessError as exc:
+    except seashore.ProcessError:
         problem = _Status.NOT_GIT
     else:
         problem = min(get_problems(out))

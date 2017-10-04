@@ -1,5 +1,7 @@
 import unittest
 
+import seashore
+
 from howsit import parse
 
 class ProblemTest(unittest.TestCase):
@@ -47,4 +49,34 @@ class ProblemTest(unittest.TestCase):
         self.assertEquals(ok.name, 'OK')
         self.assertEquals(problem.name, 'UNCOMMITTED')
 
+class DummyShell(object):
 
+    is_git = True
+
+    def clone(self):
+        return self
+
+    def batch(self, cmd, *args, **kwargs):
+        if (cmd[:2] == ['git', 'status'] and
+            set(cmd[2:]) == set(['--porcelain', '--branch'])):
+             if self.is_git:
+                 return '', ''
+             else:
+                 raise seashore.ProcessError(2, '', 'not a git directory\n')
+        raise ValueError("unknown command", cmd, args, kwargs)
+
+
+class IndicatorTest(unittest.TestCase):
+
+    def setUp(self):
+        self.shell = DummyShell()
+        self.executor = seashore.Executor(self.shell)
+
+    def test_simple_get_indicator(self):
+        ret = parse.get_indicator(self.executor)
+        self.assertEquals(ret, 'K')
+
+    def test_not_git_get_indicator(self):
+        self.shell.is_git = False
+        ret = parse.get_indicator(self.executor)
+        self.assertEquals(ret, 'G')

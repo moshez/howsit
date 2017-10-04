@@ -10,10 +10,10 @@ class _Status(enum.IntEnum):
     UNPUSHED = 2
     NO_UPSTREAM = 3
     NOT_GIT = 4
-    OK = 5
+    OK = 5  # pragma pylint: disable=invalid-name
 
 
-_indicator = {
+_INDICATOR = {
     _Status.UNTRACKED: '!',
     _Status.UNCOMMITTED: 'C',
     _Status.UNPUSHED: 'P',
@@ -48,4 +48,4 @@ def get_indicator(executor):
         problem = _Status.NOT_GIT
     else:
         problem = min(get_problems(out))
-    return _indicator[problem]
+    return _INDICATOR[problem]

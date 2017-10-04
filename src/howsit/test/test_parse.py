@@ -9,45 +9,45 @@ class ProblemTest(unittest.TestCase):
 
     def test_empty(self):
         output = b""
-        l = list(parse.get_problems(output))
-        ok = l.pop(0)
-        self.assertEquals(l, [])
-        self.assertEquals(ok.name, 'OK')
+        lst = list(parse.get_problems(output))
+        no_problem = lst.pop(0)
+        self.assertEquals(lst, [])
+        self.assertEquals(no_problem.name, 'OK')
 
     def test_no_upstream(self):
         output = b"## v1\n"
-        l = list(parse.get_problems(output))
-        ok = l.pop()
-        problem = l.pop(0)
-        self.assertEquals(l, [])
-        self.assertEquals(ok.name, 'OK')
+        lst = list(parse.get_problems(output))
+        no_problem = lst.pop()
+        problem = lst.pop(0)
+        self.assertEquals(lst, [])
+        self.assertEquals(no_problem.name, 'OK')
         self.assertEquals(problem.name, 'NO_UPSTREAM')
 
     def test_no_push(self):
         output = b"## v1...origin/v1 [ahead 1]\n"
-        l = list(parse.get_problems(output))
-        ok = l.pop()
-        problem = l.pop(0)
-        self.assertEquals(l, [])
-        self.assertEquals(ok.name, 'OK')
+        lst = list(parse.get_problems(output))
+        no_problem = lst.pop()
+        problem = lst.pop(0)
+        self.assertEquals(lst, [])
+        self.assertEquals(no_problem.name, 'OK')
         self.assertEquals(problem.name, 'UNPUSHED')
 
     def test_untracked(self):
         output = b"?? fff\n"
-        l = list(parse.get_problems(output))
-        ok = l.pop()
-        problem = l.pop(0)
-        self.assertEquals(l, [])
-        self.assertEquals(ok.name, 'OK')
+        lst = list(parse.get_problems(output))
+        no_problem = lst.pop()
+        problem = lst.pop(0)
+        self.assertEquals(lst, [])
+        self.assertEquals(no_problem.name, 'OK')
         self.assertEquals(problem.name, 'UNTRACKED')
 
     def test_uncommitted(self):
         output = b" M src/howsit/test/test_parse.py\n"
-        l = list(parse.get_problems(output))
-        ok = l.pop()
-        problem = l.pop(0)
-        self.assertEquals(l, [])
-        self.assertEquals(ok.name, 'OK')
+        lst = list(parse.get_problems(output))
+        no_problem = lst.pop()
+        problem = lst.pop(0)
+        self.assertEquals(lst, [])
+        self.assertEquals(no_problem.name, 'OK')
         self.assertEquals(problem.name, 'UNCOMMITTED')
 
 
@@ -59,8 +59,9 @@ class DummyShell(object):
         return self
 
     def batch(self, cmd, *args, **kwargs):
-        if (cmd[:2] == ['git', 'status'] and
-           set(cmd[2:]) == set(['--porcelain', '--branch'])):
+        if cmd[:2] == ['git', 'status']:
+            if set(cmd[2:]) != set(['--porcelain', '--branch']):
+                raise ValueError("unknown status command", cmd, args, kwargs)
             if self.is_git:
                 return b'', b''
             else:

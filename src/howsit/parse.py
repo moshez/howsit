@@ -43,7 +43,7 @@ def get_problems(output):
 def get_indicator(executor):
     try:
         out, _ = executor.git.status(branch=None, porcelain=None).batch()
-    except seashore.ProcessError:
+    except seashore.ProcessError as exc:
         problem = _Status.NOT_GIT
     else:
         problem = min(get_problems(out))

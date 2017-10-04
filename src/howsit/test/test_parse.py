@@ -7,14 +7,14 @@ from howsit import parse
 class ProblemTest(unittest.TestCase):
 
     def test_empty(self):
-        output = ""
+        output = b""
         l = list(parse.get_problems(output))
         ok = l.pop(0)
         self.assertEquals(l, [])
         self.assertEquals(ok.name, 'OK')
 
     def test_no_upstream(self):
-        output = "## v1\n"
+        output = b"## v1\n"
         l = list(parse.get_problems(output))
         ok = l.pop()
         problem = l.pop(0)
@@ -23,7 +23,7 @@ class ProblemTest(unittest.TestCase):
         self.assertEquals(problem.name, 'NO_UPSTREAM')
 
     def test_no_push(self):
-        output = "## v1...origin/v1 [ahead 1]\n"
+        output = b"## v1...origin/v1 [ahead 1]\n"
         l = list(parse.get_problems(output))
         ok = l.pop()
         problem = l.pop(0)
@@ -32,7 +32,7 @@ class ProblemTest(unittest.TestCase):
         self.assertEquals(problem.name, 'UNPUSHED')
 
     def test_untracked(self):
-        output = "?? fff\n"
+        output = b"?? fff\n"
         l = list(parse.get_problems(output))
         ok = l.pop()
         problem = l.pop(0)
@@ -41,7 +41,7 @@ class ProblemTest(unittest.TestCase):
         self.assertEquals(problem.name, 'UNTRACKED')
 
     def test_uncommitted(self):
-        output = " M src/howsit/test/test_parse.py\n"
+        output = b" M src/howsit/test/test_parse.py\n"
         l = list(parse.get_problems(output))
         ok = l.pop()
         problem = l.pop(0)
@@ -60,7 +60,7 @@ class DummyShell(object):
         if (cmd[:2] == ['git', 'status'] and
             set(cmd[2:]) == set(['--porcelain', '--branch'])):
              if self.is_git:
-                 return '', ''
+                 return b'', b''
              else:
                  raise seashore.ProcessError(2, '', 'not a git directory\n')
         raise ValueError("unknown command", cmd, args, kwargs)

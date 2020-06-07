@@ -7,5 +7,5 @@ Provides howsit version information.
 
 from incremental import Version
 
-__version__ = Version('howsit', 17, 9, 0)
+__version__ = Version('howsit', 20, 6, 0)
 __all__ = ["__version__"]
